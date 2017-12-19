@@ -11,7 +11,7 @@ MERN STACK application
 #Steps to Setup
 ---
 **1.Clone the application**
-`git clone https://github.com/zakiziko/devChalange.git`
+`git clone https://github.com/zakiziko/devChallenge.git`
 
 **2.Build and run the backend app using npm**
 
