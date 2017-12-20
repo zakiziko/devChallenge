@@ -32,6 +32,18 @@ class Profile extends Component{
             }
         });
     }
+    addTopic(e){
+        e.preventDefault();
+        var user =JSON.parse(sessionStorage.getItem('user'));
+        var topic = {
+            name : this.refs.Name.value,
+            description : this.refs.description.value,
+            creator : user._id
+        }
+        UserService.addTopic(topic).then(res=>{
+            window.location.reload()
+        });
+    }
     render(){
         const isActive = this.state.isActive;
         if(!isActive){
@@ -42,7 +54,20 @@ class Profile extends Component{
             return(
                 <div>
                     <h1>Hello : {this.state.user.name}</h1>
+                    <h4>Create Topic</h4>
+                    <form onSubmit={(e)=>this.addTopic(e)}>
+                        <div className="form-group col-md-4">
+                            <label>Name</label>
+                            <input type="text" className="form-control" name="name" aria-describedby="emailHelp" ref="Name"/>
+                        </div>
+                        <div className="form-group col-md-4">
+                            <label>description</label>
+                            <input type="text" className="form-control" name="description" ref="description"/>
+                        </div>
+                        <button className="btn btn-primary" type="submit" onClick={(e)=>this.addTopic(e)}>Save</button>
+                    </form>
                 </div>
+
             )
         }
 
