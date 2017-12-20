@@ -4,10 +4,12 @@
 
 const express = require('express');
 const mongoose =  require('mongoose');
-const bodyparser = require("body-parser");
-const cors = require("cors");
+const bodyparser = require('body-parser');
+const cors = require('cors');
 const config = require('./config/database');
-const users = require("./routes/user");
+const users = require('./routes/user');
+const topics = require('./routes/topic');
+const comments = require('./routes/comment');
 const passport = require('passport');
 
 /**
@@ -41,6 +43,8 @@ require('./config/passport')(passport);
 
 //routes middleware
 app.use('/users',users);
+app.use('/topics',topics);
+app.use('/comments',comments);
 
 //the server will be open on port 3000
 app.listen(3000);
