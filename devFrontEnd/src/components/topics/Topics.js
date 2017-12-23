@@ -1,11 +1,16 @@
 import React,{Component} from 'react';
 import UserService from '../../services/UseService';
+import TopicItem from './TopicItem';
 
 class Topics extends Component{
     constructor(){
         super();
         this.state={
-            topics:[]
+            topics:[],
+            current_page : 1,
+            perPage : 50,
+            showNext : true,
+            order:1,
         }
     }
     componentWillMount(){
@@ -17,79 +22,90 @@ class Topics extends Component{
             this.props.history.push('/')
         }
     }
-
-
+    change(event){
+        var targetValue=event.target.value;
+        UserService.getAllTopicss().then(res=>{
+            if(targetValue === "2"){    
+                UserService.sortTopic(res);
+                this.setState({topics:res,order:2});
+            }else{
+                this.setState({topics:res});
+            }      
+        });
+    }
+    next(){
+        var moreTopic = this.state.topics.length-(this.state.current_page*this.state.perPage);
+        if(moreTopic<=0){
+            this.setState({showNext:false});
+        }else{
+            var curentPage = this.state.current_page;
+            curentPage++;
+            this.setState({current_page:curentPage});
+        }
+    }
+    back(){
+        var curentPage = this.state.current_page;
+        curentPage--;
+        if(curentPage>=1){
+            this.setState({current_page:curentPage});
+        }else{
+            this.setState({showNext:true});
+        }
+    }
+    addComment(comment){
+        UserService.addComment(comment).then(res=>{
+            if(this.state.order===1){
+                this.setState({topics:res});
+            }else{
+                UserService.sortTopic(res);
+                this.setState({topics:res});
+            }
+        })
+    }
     upVote(topicId){
         var user = JSON.parse(sessionStorage.getItem('user'));
         UserService.upVoteTopic(topicId,user).then(res=>{
-            alert(res.message);
+           if(!res){
+               alert("You already UpVote this Topic");
+           }else{
+            if(this.state.order===1){
+                this.setState({topics:res});
+            }else{
+                UserService.sortTopic(res);
+                this.setState({topics:res});
+            }
+           }
         })
-        window.location.reload();
+      //  window.location.reload();
 
-    }
-
-    addComment(e,topicId){
-        e.preventDefault();
-        var user = JSON.parse(sessionStorage.getItem('user'));
-        var comment = {
-            onTopic : topicId,
-            content : this.refs[topicId].value,
-            creator : user._id
-        }
-        UserService.addComment(comment).then(res=>{
-            alert(res);
-        })
-        window.location.reload();
-    }
-    change(event){
-        if(event.target.value==="2"){
-            var ordrTopics = [];
-            UserService.getAllTopicss().then(res=>{
-                ordrTopics= UserService.sortTopic(res);
-                this.setState({topics:ordrTopics});
-            });
-        }else{
-            window.location.reload();
-        }
     }
     render(){
+        var offset = this.state.current_page*this.state.perPage;
+        var starset = (this.state.current_page-1)*this.state.perPage;
         const topicItems = this.state.topics.map((topic, i)=>{
-            var dateTime = topic.creationDate.slice(0,10);
-            return(
-                <div className="col-md-4" key={i}>
-                    <div className="card">
-                        <div className="card-body">
-                            <h4 className="card-title">{topic.name}</h4>
-                            <p className="card-text">
-                            {topic.description}
-                            <small className="form-text text-muted">writer: {topic.creator.name} </small>
-                            <small className="form-text text-muted">{dateTime}</small>
-                            <i className="fa fa-comments-o">{topic.comments.length}</i> comments
-                            </p>                
-                            <hr className="my-4"/>
-                            <div className="input-group">
-                                <input type="text" className="form-control" id ="Comment" ref = {topic._id} placeholder="write a comment ..."/>
-                                <span className="input-group-btn">
-                                    <button className="btn btn-secondary" type="submit" onClick={(e)=>this.addComment(e,topic._id)} >
-                                    <i className="fa fa-comment-o"></i></button>
-                                </span>
-                            </div>
-                            <hr className="my-4"/>
-                            <button type="submit" onClick={(e)=>this.upVote(topic._id)} className="btn btn-info btn-sm">
-                            {topic.upVote.length}<i className="fa fa-thumbs-o-up"></i>
-                            </button>upvotes
-                        </div>
-                    </div>
-                    <br/>
-                </div>
-            )
+            if(i>=starset && i<offset){
+                return(
+                    <TopicItem key = {i} topic={topic} AddComment={this.addComment.bind(this)} 
+                    upVote={this.upVote.bind(this)}/>
+                 )
+            }
         })
         return(
             <div>
                 <div className="row">
-                <div className="col-md-8"> <h1>Topics</h1></div>
+                    <div className="col-md-8"> 
+                        <h1>Topics</h1>
+                       {this.state.showNext ? 
+                       <button className="btn btn-primary" onClick={this.next.bind(this)}>
+                        next  <i className="fa fa-chevron-right"></i>
+                       </button>:
+                            <button className="btn btn-success" onClick={this.back.bind(this)}>
+                            <i className="fa fa-chevron-left"></i>   back
+                            </button>
+                        }
+                    </div>
                     <div className="col-md-3">
-                    <label>Sorting</label>
+                        <label>Sorting</label>
                         <select className="custom-select" onChange={(e)=>this.change(e)}>
                             <option value="1">most recent</option>
                             <option value="2">most rated</option>

@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import {NavLink} from 'react-router-dom';
+import UserService from '../../services/UseService';
 
 class Navbar extends Component{
     logOut(){
@@ -17,7 +18,8 @@ class Navbar extends Component{
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
-                            <NavLink to="/" className="nav-link">Home <span className="sr-only">(current)</span></NavLink>
+                        {!UserService.isActive() ?  <NavLink to="/" className="nav-link">Home <span className="sr-only">(current)</span></NavLink>
+                         : null}
                         </li> 
                         <li className="nav-item">
                             <NavLink to ="/profile" className="nav-link">Profile</NavLink>
@@ -28,8 +30,11 @@ class Navbar extends Component{
                     </ul>
                     <ul className="navbar-nav">
                     <li className="nav-item">
-                    <a onClick={this.logOut} className="nav-link">Logout</a>
-                    </li>
+                    {UserService.isActive() ? <a onClick={this.logOut} className="btn btn-secondary">
+                       <i className="fa fa-sign-out">logout</i>
+                    </a>
+                         : null}
+                     </li>
                     </ul>
                 </div>
             </nav>

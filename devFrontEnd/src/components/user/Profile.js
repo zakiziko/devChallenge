@@ -41,6 +41,7 @@ class Profile extends Component{
             creator : user._id
         }
         UserService.addTopic(topic).then(res=>{
+            alert(res.data);
             window.location.reload()
         });
     }
