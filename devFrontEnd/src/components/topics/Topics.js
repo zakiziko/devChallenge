@@ -9,7 +9,8 @@ class Topics extends Component{
             topics:[],
             current_page : 1,
             perPage : 50,
-            showNext : true,
+            showNextButton : true,
+            showBackButton : false,
             order:1,
         }
     }
@@ -36,20 +37,20 @@ class Topics extends Component{
     next(){
         var moreTopic = this.state.topics.length-(this.state.current_page*this.state.perPage);
         if(moreTopic<=0){
-            this.setState({showNext:false});
+            this.setState({showNextButton:false,showBackButton:true});
         }else{
             var curentPage = this.state.current_page;
             curentPage++;
-            this.setState({current_page:curentPage});
+            this.setState({current_page:curentPage,showBackButton:true});
         }
     }
     back(){
         var curentPage = this.state.current_page;
         curentPage--;
         if(curentPage>=1){
-            this.setState({current_page:curentPage});
+            this.setState({current_page:curentPage,showNextButton:true});
         }else{
-            this.setState({showNext:true});
+            this.setState({showNextButton:true,showBackButton:false});
         }
     }
     addComment(comment){
@@ -95,13 +96,16 @@ class Topics extends Component{
                 <div className="row">
                     <div className="col-md-8"> 
                         <h1>Topics</h1>
-                       {this.state.showNext ? 
-                       <button className="btn btn-primary" onClick={this.next.bind(this)}>
+                        {this.state.showBackButton ? 
+                        <button className="btn btn-outline-secondary btn-sm" style={{marginRight: 1 + 'em'}} onClick={this.back.bind(this)}>
+                            <i className="fa fa-chevron-left"></i>  back
+                        </button>:null
+                        }
+                       {this.state.showNextButton ? 
+                       <button className="btn btn-outline-info btn-sm" onClick={this.next.bind(this)}>
                         next  <i className="fa fa-chevron-right"></i>
-                       </button>:
-                            <button className="btn btn-success" onClick={this.back.bind(this)}>
-                            <i className="fa fa-chevron-left"></i>   back
-                            </button>
+                       </button>:null
+                            
                         }
                     </div>
                     <div className="col-md-3">
