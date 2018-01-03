@@ -5,7 +5,12 @@ const Comment = require('../modules/comment');
 const bodyParser= require('body-parser');
 const router = express.Router();
 
-router.post('/add',(req,res)=>{
+/**
+ * adding a new comment into a Topic
+ * @param {json} req.body it's contain the id of the topic commented, comment body and the comment creator
+ *@return {json} message the describe the state of the result  
+ */
+router.post('/',(req,res)=>{
   var Newcomment = new Comment({
     onTopic : req.body.onTopic,
     content : req.body.content,

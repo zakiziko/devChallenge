@@ -1,3 +1,8 @@
+/**
+ * @desc this module contain our authentification Strategy based on passport-facebook
+ * for more about the passport-facebook @see {@link "https://www.npmjs.com/package/passport-facebook"}
+ */
+
 const passport = require('passport');
 const auth = require('./auth');
 const graph = require('fbgraph');
@@ -13,6 +18,7 @@ module.exports = function(passport){
   passport.deserializeUser(function(user, done) {
     done(null, user);
   });
+
   //Use the FacebookStrategy within passport
   passport.use(new FacebookStrategy({
       clientID: auth.clientID,

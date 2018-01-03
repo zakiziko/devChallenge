@@ -11,7 +11,12 @@ const topicSchema = mongoose.Schema({
 });
 
 const Topic = module.exports = mongoose.model('Topic',topicSchema);
-
+/**
+ * @desc this function push a new comment into comments list of the topic
+ * @function
+ * @param {json} comment
+ * @return  {promise} callback
+ */
 module.exports.UpdateComments = function(comment,callback){
   const query = {_id: comment.onTopic};
   Topic.findOneAndUpdate(query,

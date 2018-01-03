@@ -1,5 +1,5 @@
 /**
- * @description this fill will hundell all our topic Rest api
+ * @description this module will hundell all our topic Rest api
  */
 const express = require("express");
 const Topic = require('../modules/topic');
@@ -11,7 +11,7 @@ const router = express.Router();
 /**
  * get all Topics Sorted by date of creation
  */
-router.get('/all',(req,res)=>{
+router.get('/',(req,res)=>{
   Topic
   .find({})
   .sort({creationDate:-1})
@@ -23,10 +23,10 @@ router.get('/all',(req,res)=>{
 })
 
 /**
- * create a new tpoic based on json object passed in using body parser
+ * @desc create a new tpoic based on json object passed in using body parser
  *@return {json}
  */
-router.post('/add',(req,res)=>{
+router.post('/',(req,res)=>{
   var topic = new Topic({
     name : req.body.name,
     description:req.body.description,
@@ -41,11 +41,12 @@ router.post('/add',(req,res)=>{
 });
 
 /**
- * updating the upVote list on a specifique topic
- *@param {String} id topic ID
- *@return {json} message
+ * updating the upVote list (the list of users that upvoting this topic) on a specifique topic
+ * @param {String} id topic ID
+ * @param {json} req.body._id id of user that upvote this topic
+ * @return {json} message
  */
-router.put('/upVote/:id',(req,res)=>{
+router.put('/:id',(req,res)=>{
   const query = { _id: req.params.id };
   var UpVoteUser = new User({
     _id : req.body._id

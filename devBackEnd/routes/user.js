@@ -4,16 +4,18 @@ const passport = require('passport');
 const router = express.Router();
 
 /**
- * @description asking facebook authentication. facebook  will send the accessToken into the callbackUrl app Config
+ * @description asking facebook authentication. facebook  will send the accessToken into the callbackUrl in the app Config
+ * and here we are using the facebook passport strategy for more @see {@link "https://www.npmjs.com/package/passport-facebook"}
  */
-router.get('/auth/facebook',
+router.get('/',
   passport.authenticate('facebook',{authType: 'rerequest',scope: 'email'}));
 
 /**
- * the frontEnd App will send the accessToken to this function to deserialize it to json object
+ * @description the frontEnd App will send the accessToken to this function to deserialize it to json object
+ * that have the user data
  *@return {json}
  */
-router.get('/auth/facebook/callback',
+router.get('/auth',
   passport.authenticate('facebook'),
   function(req, res) {
     // Successful authentication
