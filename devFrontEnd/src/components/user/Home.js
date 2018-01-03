@@ -4,7 +4,7 @@ class Home extends Component{
     constructor(){
         super();
         this.state={
-            FacebookAuthUrl:'http://localhost:3000/users/auth/facebook'
+            FacebookAuthUrl:'http://localhost:3000/users'
         }
     }
     render(){

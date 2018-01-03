@@ -13,7 +13,7 @@ var UserService = {
      * @description is given us back user info email,name,id;
      */
     getUserDetails : function(token){
-        return axios.get('http://localhost:3000/users/auth/facebook/callback'+token)
+        return axios.get('http://localhost:3000/users/auth'+token)
         .then(res=>{
             var user = {};
             user = res.data.user;
@@ -44,7 +44,7 @@ var UserService = {
     addTopic : function(topic){
         return axios.request({
             method : "POST",
-            url:"http://localhost:3000/topics/add",
+            url:"http://localhost:3000/topics",
             data : topic
         }).then(res=>{
             return res
@@ -56,7 +56,7 @@ var UserService = {
      * @description this function return all topics getting them from back end
      */
     getAllTopicss : function(){
-        return axios.get('http://localhost:3000/topics/all').then(res=>{
+        return axios.get('http://localhost:3000/topics').then(res=>{
             return res.data;
         })
     },
@@ -69,7 +69,7 @@ var UserService = {
     upVoteTopic : function(id,data){
         return axios.request({
             method : 'PUT',
-            url:'http://localhost:3000/topics/upVote/'+id,
+            url:'http://localhost:3000/topics/'+id,
             data : data
         }).then(res=>{
             if(res.data.state){
@@ -88,7 +88,7 @@ var UserService = {
     addComment : function(comment){
         return axios.request({
             method : "POST",
-            url:"http://localhost:3000/comments/add",
+            url:"http://localhost:3000/comments",
             data : comment
         }).then(res=>{
             //return res.data
